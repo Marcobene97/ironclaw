@@ -12,6 +12,7 @@ use ironclaw::{
     channels::{
         ChannelManager, GatewayChannel, HttpChannel, ReplChannel, SignalChannel, WebhookServer,
         WebhookServerConfig,
+        tui::infer_context_window,
         wasm::{WasmChannelRouter, WasmChannelRuntime},
         web::log_layer::LogBroadcaster,
     },
@@ -595,7 +596,7 @@ async fn async_main() -> anyhow::Result<()> {
             env!("CARGO_PKG_VERSION"),
             current_model,
         )
-        .with_context_window(context_window.unwrap_or(128_000))
+        .with_context_window(context_window.unwrap_or_else(|| infer_context_window(&current_model)))
         .with_layout(layout)
         .with_log_broadcaster(Arc::clone(&log_broadcaster))
         .with_tools(tool_categories)

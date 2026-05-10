@@ -89,7 +89,7 @@ pub fn resolve_tui_layout(
     layout
 }
 
-fn infer_context_window(model_id: &str) -> u64 {
+pub(crate) fn infer_context_window(model_id: &str) -> u64 {
     let normalized = model_id
         .trim()
         .to_ascii_lowercase()
@@ -110,6 +110,11 @@ fn infer_context_window(model_id: &str) -> u64 {
     }
 
     if normalized.starts_with("gemini-") {
+        return 1_000_000;
+    }
+
+    // DeepSeek V4 models have 1M context native
+    if normalized.contains("deepseek") {
         return 1_000_000;
     }
 
